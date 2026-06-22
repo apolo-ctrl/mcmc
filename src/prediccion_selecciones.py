@@ -25,9 +25,11 @@ con un encabezado "# === N. ... ===" que coincide con el guion solicitado.
 # =========================================================================================
 # En Google Colab / entorno nuevo, descomenta la siguiente línea:
 #
-#   !pip install pandas numpy scipy xgboost pymc arviz matplotlib
+#   !pip install pandas numpy scipy xgboost scikit-learn pymc arviz matplotlib
 #
-# (En local: pip install pandas numpy scipy xgboost pymc arviz matplotlib)
+# (En local: pip install pandas numpy scipy xgboost scikit-learn pymc arviz matplotlib)
+#
+# Nota: la API de scikit-learn de XGBoost (XGBRegressor) REQUIERE scikit-learn instalado.
 
 
 # =========================================================================================

@@ -36,7 +36,11 @@ pip install -r requirements.txt
 ```
 
 Requiere Python 3.10+. Las dependencias principales son `pandas`, `numpy`, `scipy`,
-`xgboost`, `pymc`, `arviz` y `matplotlib`.
+`xgboost`, `scikit-learn`, `pymc`, `arviz` y `matplotlib`.
+
+> Nota: la API de scikit-learn de XGBoost (`XGBRegressor`) **requiere** que
+> `scikit-learn` esté instalado. Si ves `ImportError: sklearn needs to be installed`,
+> ejecuta `pip install scikit-learn`.
 
 ---
 
