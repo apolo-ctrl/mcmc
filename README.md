@@ -135,6 +135,27 @@ de cada modelo y se compara con el resultado real, contrastándolo con un baseli
 
 ---
 
+## Liga MX (clubes)
+
+El mismo modelo aplicado a la **Liga MX** está en [`src/liga_mx.py`](src/liga_mx.py). Reutiliza
+todas las funciones de `prediccion_selecciones.py` y solo cambia la **fuente de datos**:
+
+- Fuente: [football-data.co.uk — México](https://www.football-data.co.uk/new/MEX.csv)
+  (columnas `Date, Home, Away, HG, AG, Res` + cuotas).
+- El loader descarga el CSV con un *User-Agent* de navegador (el sitio bloquea las
+  peticiones automáticas sin cabecera).
+
+Ejecución:
+
+```bash
+python src/liga_mx.py
+```
+
+Configura el partido editando `HOME_TEAM`, `AWAY_TEAM` al inicio del archivo. Usa los
+**nombres exactos** del dataset; si te equivocas, el script imprime la lista de equipos
+disponibles. Fuente alternativa en formato CSV limpio:
+[footballcsv/mexico](https://github.com/footballcsv/mexico).
+
 ## Actualización automática
 
 El script **siempre usa los datos más recientes**: cada ejecución descarga el CSV en vivo
