@@ -109,8 +109,8 @@ def cargar_datos(url=DATA_URL, anio_min=2018):
 # 4. CONFIGURACIÓN DEL PARTIDO
 # =========================================================================================
 # Cambia aquí el enfrentamiento que quieres predecir.
-HOME_TEAM = "Argentina"
-AWAY_TEAM = "Brazil"
+HOME_TEAM = "Norway"
+AWAY_TEAM = "Senegal"
 NEUTRAL   = False     # True si se juega en cancha neutral (sin ventaja de localía)
 MAX_GOALS = 8         # tamaño de la matriz de marcadores (0..MAX_GOALS por equipo)
 
