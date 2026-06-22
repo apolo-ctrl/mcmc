@@ -438,6 +438,29 @@ def _resumen_matriz(matrix):
     return p_home, p_draw, p_away, (i, j, matrix[i, j])
 
 
+def top_marcadores(matrix, n=10):
+    """Devuelve los n marcadores más probables como lista de (i, j, prob),
+    ordenados de mayor a menor probabilidad."""
+    flat = matrix.ravel()
+    # índices de los n mayores (argsort descendente)
+    top_idx = np.argsort(flat)[::-1][:n]
+    res = []
+    for k in top_idx:
+        i, j = np.unravel_index(k, matrix.shape)
+        res.append((int(i), int(j), float(matrix[i, j])))
+    return res
+
+
+def imprimir_top(matrix, home_team, away_team, n=10):
+    """Imprime el Top n de marcadores más probables con barra de proporción."""
+    tops = top_marcadores(matrix, n)
+    pmax = tops[0][2] if tops else 1.0
+    print(f"  Top {n} marcadores ({home_team} - {away_team}):")
+    for rank, (i, j, p) in enumerate(tops, 1):
+        barra = "#" * int(round((p / pmax) * 20))
+        print(f"    {rank:2d}. {i}-{j}  {p*100:5.2f}%  {barra}")
+
+
 def visualizar(matrix, home_team, away_team, titulo, lam=None):
     """Dibuja la matriz de probabilidad de marcadores como heatmap + resumen 1X2."""
     p_home, p_draw, p_away, (bi, bj, bp) = _resumen_matriz(matrix)
@@ -558,6 +581,7 @@ def main():
         print(f"  1X2 -> {HOME_TEAM}: {ph*100:5.1f}% | Empate: {pd_*100:5.1f}% | "
               f"{AWAY_TEAM}: {pa*100:5.1f}%")
         print(f"  Marcador más probable: {bi}-{bj} ({bp*100:.1f}%)")
+        imprimir_top(M, HOME_TEAM, AWAY_TEAM, n=10)
 
     # --- 10. Visualización ---
     fig1 = visualizar(M_bayes, HOME_TEAM, AWAY_TEAM,
