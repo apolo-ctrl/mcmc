@@ -451,36 +451,6 @@ def top_marcadores(matrix, n=10):
     return res
 
 
-def goles_esperados(matrix):
-    """Goles esperados (lambda efectivo) de local y visitante a partir de la matriz.
-    E[goles_local] = sum_i i * P(local marca i)
-    E[goles_visit] = sum_j j * P(visitante marca j)
-    """
-    i_idx = np.arange(matrix.shape[0])
-    j_idx = np.arange(matrix.shape[1])
-    e_home = float((matrix.sum(axis=1) * i_idx).sum())
-    e_away = float((matrix.sum(axis=0) * j_idx).sum())
-    return e_home, e_away
-
-
-def marcador_por_resultado(matrix):
-    """Marcador más probable PARA CADA resultado 1X2.
-
-    Devuelve un dict con la celda más probable y su probabilidad dentro de:
-      'H' -> victorias del local   (i > j)
-      'D' -> empates               (i == j)
-      'A' -> victorias del visitante (i < j)
-    """
-    best = {"H": ((0, 0), 0.0), "D": ((0, 0), 0.0), "A": ((0, 0), 0.0)}
-    for i in range(matrix.shape[0]):
-        for j in range(matrix.shape[1]):
-            p = matrix[i, j]
-            key = "H" if i > j else ("D" if i == j else "A")
-            if p > best[key][1]:
-                best[key] = ((i, j), float(p))
-    return best
-
-
 def imprimir_top(matrix, home_team, away_team, n=10):
     """Imprime el Top n de marcadores más probables con barra de proporción."""
     tops = top_marcadores(matrix, n)
@@ -607,22 +577,10 @@ def main():
 
     for nombre, M in [("MCMC Bayesiano", M_bayes), ("XGBoost híbrido", M_xgb)]:
         ph, pd_, pa, (bi, bj, bp) = _resumen_matriz(M)
-        eh, ea = goles_esperados(M)
-        por_res = marcador_por_resultado(M)
         print(f"\n[{nombre}]")
-        print(f"  Goles esperados -> {HOME_TEAM}: {eh:.2f}  |  {AWAY_TEAM}: {ea:.2f}")
         print(f"  1X2 -> {HOME_TEAM}: {ph*100:5.1f}% | Empate: {pd_*100:5.1f}% | "
               f"{AWAY_TEAM}: {pa*100:5.1f}%")
-        favorito = max([(ph, HOME_TEAM), (pd_, "Empate"), (pa, AWAY_TEAM)])
-        print(f"  Favorito (1X2): {favorito[1]} ({favorito[0]*100:.1f}%)")
-        print(f"  Marcador más probable (global): {bi}-{bj} ({bp*100:.1f}%)")
-        (hi_, hj_), hp_ = por_res["H"]
-        (di_, dj_), dp_ = por_res["D"]
-        (ai_, aj_), ap_ = por_res["A"]
-        print(f"  Marcador más probable por resultado:")
-        print(f"    - si gana {HOME_TEAM:<12}: {hi_}-{hj_} ({hp_*100:.1f}%)")
-        print(f"    - empate                : {di_}-{dj_} ({dp_*100:.1f}%)")
-        print(f"    - si gana {AWAY_TEAM:<12}: {ai_}-{aj_} ({ap_*100:.1f}%)")
+        print(f"  Marcador más probable: {bi}-{bj} ({bp*100:.1f}%)")
         imprimir_top(M, HOME_TEAM, AWAY_TEAM, n=10)
 
     # --- 10. Visualización ---
