@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# Salidas generadas
+*.png
+*.csv
+!results_sample.csv
+
+# Datos descargados
+data/
+
+# PyMC / ArviZ traces
+*.nc
+
+# Sistema
+.DS_Store
+.idea/
+.vscode/
