@@ -1,0 +1,45 @@
+name: Predicción nocturna
+
+# Se ejecuta automáticamente cada noche y también se puede lanzar a mano.
+on:
+  schedule:
+    # 07:00 UTC todos los días (el dataset se actualiza cada noche).
+    # Ajusta la hora si quieres: usa formato cron en UTC.
+    - cron: "0 7 * * *"
+  workflow_dispatch:        # permite ejecutarlo manualmente desde la pestaña "Actions"
+
+jobs:
+  prediccion:
+    runs-on: ubuntu-latest
+    env:
+      MPLBACKEND: Agg       # backend de matplotlib sin pantalla (entorno headless)
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Ejecutar predicción (descarga el dataset más reciente)
+        run: |
+          python src/prediccion_selecciones.py | tee prediccion_salida.txt
+
+      - name: Subir resultados como artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prediccion-${{ github.run_id }}
+          path: |
+            prediccion_salida.txt
+            matriz_bayes.png
+            matriz_xgboost.png
+          if-no-files-found: warn
+          retention-days: 30

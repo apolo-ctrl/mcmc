@@ -135,6 +135,35 @@ de cada modelo y se compara con el resultado real, contrastándolo con un baseli
 
 ---
 
+## Actualización automática
+
+El script **siempre usa los datos más recientes**: cada ejecución descarga el CSV en vivo
+desde `raw.githubusercontent.com/.../results.csv`, así que no hay copia local cacheada. El
+dataset de origen se actualiza cada noche, por lo que basta con **ejecutar el script de
+nuevo** para tener los datos al día.
+
+Para ejecutarlo de forma desatendida cada noche hay dos opciones:
+
+### GitHub Actions (en la nube, recomendado)
+El repo incluye [`.github/workflows/prediccion.yml`](.github/workflows/prediccion.yml), que
+corre cada noche (`cron: "0 7 * * *"`, en UTC), instala dependencias, ejecuta la predicción
+y sube los resultados (`prediccion_salida.txt`, `matriz_bayes.png`, `matriz_xgboost.png`)
+como *artifacts* descargables desde la pestaña **Actions**. También se puede lanzar a mano
+con **Run workflow** (`workflow_dispatch`). Ajusta la hora del `cron` a tu gusto.
+
+### Windows (en tu PC, con el Programador de tareas)
+Crea un `.bat` (p. ej. `run_prediccion.bat`):
+
+```bat
+cd /d C:\Users\apolo\Downloads\mundial2026\mcmc
+git pull
+python src/prediccion_selecciones.py > prediccion_salida.txt 2>&1
+```
+
+Luego en **Programador de tareas** (Task Scheduler): *Crear tarea básica* → desencadenador
+*Diariamente* a la hora deseada → acción *Iniciar un programa* → selecciona el `.bat`.
+(Requiere que el PC esté encendido a esa hora.)
+
 ## Licencia
 
 MIT. Ver [LICENSE](LICENSE).
